@@ -10,5 +10,4 @@ sed -i "s/%password%/$3/g" /var/www/html/wp-config.php
 
 mysql -h$1 -u$2 -p$3 < wordpressdb.sql
 
-#mysql -h$1 -u$2 -p$3 -e "use wordpressdb; update wp_options set option_value='http://$4' where option_name='siteurl' or option_name='home'"
 mysql -h$1 -u$2 -p$3 -e "use wordpressdb; update wp_options set option_value='http://$4' where option_name='siteurl' or option_name='home'; update wp_posts set post_content = replace(post_content, '54.92.58.70', '$4');"
