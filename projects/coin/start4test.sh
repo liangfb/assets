@@ -22,7 +22,7 @@ do
     if [ "$?" -eq 0 ]
     then
         echo "inif" >> $instanceid.log
-        filename=$(ls /mnt/data/testdir/*.plot)
+        filename=$(basename $(ls /mnt/data/testdir/*.plot))
         echo $filename >> $instanceid.log
         totalFoundObject=$(aws s3 ls s3://${1}/${filename} --recursive --summarize | grep "Total Objects: " | sed 's/[^0-9]*//g')
         echo $totalFoundObject >> $instanceid.log
