@@ -5,7 +5,6 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 destdir=${2:-'/mnt/tmp/data'}
-sudo su
 echo $1 >> $instanceid.log
 echo $destdir >> $instanceid.log
 sudo yum update -y
