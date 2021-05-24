@@ -1,5 +1,10 @@
 #!/bin/bash
-isfullnode=${1:-'false'}
+if [ $# -lt 1 ]; then 
+    echo "Please specify parameter. Format: ./start.sh <swap endpoint> <isfullnode>."
+    echo "Exit with error."
+    exit 1
+fi
+isfullnode=${2:-'false'}
 sudo su
 yum install  jq -y
 wget https://github.com/ethersphere/bee-clef/releases/download/v0.4.12/bee-clef_0.4.12_amd64.rpm
