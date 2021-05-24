@@ -1,7 +1,13 @@
 #!/bin/bash
+if [ $# -lt 1 ]; then 
+    echo "Please specify S3 bucket and loca data directory. Format: ./start.sh <bucket> <local data directory>."
+    echo "Exit with error."
+    exit 1
+fi
+destdir=${2:-'/mnt/tmp/data'}
 sudo su
 echo $1 >> $instanceid.log
-echo $2 >> $instanceid.log
+echo $destdir >> $instanceid.log
 sudo yum update -y
 sudo yum install python3 git -y
 git clone https://github.com/Chia-Network/chia-blockchain.git -b latest
@@ -12,18 +18,18 @@ chia init
 instanceid=$(curl -s 169.254.169.254/1.0/meta-data/instance-id)
 echo "Plot started" >> $instanceid.log
 echo $(date) >> $instanceid.log
-chia plots create -k 32 -r 2 -n 1 -t /mnt/tmp -d $2
+chia plots create -k 32 -r 2 -n 1 -t /mnt/tmp -d $destdir
 echo "Plot completed" >> $instanceid.log
 echo $(date) >> $instanceid.log
-echo $(ll $2) >> $instanceid.log
+echo $(ll $destdir) >> $instanceid.log
 echo "Copy started" >> $instanceid.log
 whilecondition=true
 while [ $whilecondition=true ]
 do
-    aws s3 sync --storage-class ONEZONE_IA $2 s3://$1
+    aws s3 sync --storage-class ONEZONE_IA $destdir s3://$1
     if [ "$?" -eq 0 ]
     then
-        filename=$(basename $(ls $2/*.plot))
+        filename=$(basename $(ls $destdir/*.plot))
         echo $filename >> $instanceid.log
         totalFoundObject=$(aws s3 ls s3://${1}/${filename} --recursive --summarize | grep "Total Objects: " | sed 's/[^0-9]*//g')
         echo $totalFoundObject >> $instanceid.log
