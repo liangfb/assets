@@ -13,6 +13,8 @@ rpm -i bee-clef_0.4.12_amd64.rpm
 rpm -i bee_0.6.1_amd64.rpm
 echo "swap-endpoint: $1" >> /etc/bee/bee.yaml
 echo "full-node: $isfullnode" >> /etc/bee/bee.yaml
+echo "cors-allowed-origins: \"*\"" >> /etc/bee/bee.yaml
+echo "welcome-message: \"Hello world! \"" >> /etc/bee/bee.yaml
 systemctl start bee
 region=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq .region -r)
 aws dynamodb describe-table --table-name swarmaddr
